@@ -2,15 +2,13 @@ package co.com.bancolombia.usecase.gettopstockproducts;
 
 import co.com.bancolombia.model.exception.BusinessException;
 import co.com.bancolombia.model.exception.message.BusinessErrorMessage;
+import co.com.bancolombia.model.franchise.Franchise;
 import co.com.bancolombia.model.franchise.TopStockProduct;
 import co.com.bancolombia.model.franchise.gateways.FranchiseRepository;
-import co.com.bancolombia.model.product.Product;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Comparator;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 public class GetTopStockProductsUseCase {
@@ -20,29 +18,22 @@ public class GetTopStockProductsUseCase {
     public Flux<TopStockProduct> execute(String franchiseId) {
 
         return repository.findById(franchiseId)
-                .switchIfEmpty(Mono.error(
-                        new BusinessException(
-                                BusinessErrorMessage.FRANCHISE_NOT_FOUND)))
-                .flatMapMany(franchise ->
-                        Flux.fromIterable(franchise.getBranches())
-                                .map(branch -> {
-
-                                    Product product = branch.getProducts()
-                                            .stream()
-                                            .max(Comparator.comparing(Product::getStock))
-                                            .orElse(null);
-
-                                    if (product == null) {
-                                        return null;
-                                    }
-
-                                    return TopStockProduct.builder()
-                                            .branchName(branch.getName())
-                                            .productName(product.getName())
-                                            .stock(product.getStock())
-                                            .build();
-                                })
-                                .filter(Objects::nonNull)
+                .switchIfEmpty(
+                        Mono.error(
+                                new BusinessException(
+                                        BusinessErrorMessage.FRANCHISE_NOT_FOUND)))
+                .flatMapIterable(Franchise::getBranches)
+                .flatMap(branch ->
+                        Flux.fromIterable(branch.getProducts())
+                                .reduce((p1, p2) ->
+                                        p1.getStock() >= p2.getStock() ? p1 : p2)
+                                .map(product ->
+                                        TopStockProduct.builder()
+                                                .branchName(branch.getName())
+                                                .productName(product.getName())
+                                                .stock(product.getStock())
+                                                .build()
+                                )
                 );
     }
 }
