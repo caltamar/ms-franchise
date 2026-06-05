@@ -54,6 +54,38 @@ Razones de la elección:
 - Java 23
 - Gradle 9+
 - Docker Desktop
+- Variable de entorno `MONGODB_URI` configurada
+
+## Variables de Entorno
+
+La aplicación requiere la siguiente variable de entorno para conectarse a MongoDB Atlas:
+
+| Variable | Descripción |
+|-----------|-------------|
+| MONGODB_URI | URI de conexión a MongoDB Atlas |
+
+### Ejemplo PowerShell
+
+```powershell
+$env:MONGODB_URI="mongodb+srv://<user>:<password>@<cluster>.mongodb.net/franchise_db"
+gradle bootRun
+```
+
+### Ejemplo Docker
+
+```bash
+docker run -d \
+-p 8080:8080 \
+-e MONGODB_URI="mongodb+srv://<user>:<password>@<cluster>.mongodb.net/franchise_db" \
+--name franchise-api \
+ms-franchise
+```
+
+### Nota
+
+Por motivos de seguridad, las credenciales de MongoDB Atlas no se encuentran versionadas en el repositorio.
+
+La variable `MONGODB_URI` debe configurarse antes de ejecutar la aplicación.
 
 ### Compilar
 
@@ -148,5 +180,6 @@ Se implementaron pruebas unitarias utilizando:
 - Actualización de nombre de franquicia.
 - Actualización de nombre de sucursal.
 - Actualización de nombre de producto.
+- Validación de nombres únicos para franquicias.
 - Persistencia en MongoDB Atlas.
 - Empaquetado usando Docker.
