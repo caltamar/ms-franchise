@@ -1,0 +1,7 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: franchise-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
