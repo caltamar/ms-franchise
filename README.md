@@ -175,6 +175,23 @@ Se implementaron pruebas unitarias utilizando:
 - Mockito
 - StepVerifier
 
+## Infraestructura como Código
+
+Se implementó Infraestructura como Código (IaC) utilizando Terraform con el objetivo de automatizar la provisión de recursos en AWS.
+
+Actualmente se incluyen las siguientes definiciones:
+
+- Provider de AWS.
+- Repositorio ECR para almacenamiento de imágenes Docker.
+- Variables parametrizables.
+- Outputs para exponer información de los recursos creados.
+
+La configuración Terraform se encuentra en:
+
+```text
+terraform/
+```
+
 ## Funcionalidades Adicionales
 
 - Actualización de nombre de franquicia.
