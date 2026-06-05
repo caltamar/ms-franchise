@@ -20,6 +20,11 @@ public enum BusinessErrorMessage {
     PRODUCT_NOT_FOUND(
             "F003",
                     "Product not found"
+    ),
+
+    FRANCHISE_ALREADY_EXISTS(
+            "F004",
+            "Franchise already exists"
     );
 
     private final String code;

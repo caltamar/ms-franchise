@@ -30,6 +30,6 @@ public class MongoRepositoryAdapter extends AdapterOperations<
 
     @Override
     public Mono<Boolean> existsByName(String name) {
-        return null;
+        return repository.existsByName(name);
     }
 }
